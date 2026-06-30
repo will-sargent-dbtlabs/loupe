@@ -1,0 +1,136 @@
+# lavish-axi fork — feature PRD
+
+_Fork: `will-sargent-dbtlabs/lavish-axi` · Status: deferred pending review_
+
+---
+
+## Context
+
+This PRD covers three planned features for the `will-sargent-dbtlabs/lavish-axi` fork. The fork tracks upstream (`kunchenguid/lavish-axi`) via `git fetch upstream` + periodic merges; changes are isolated as new files or small additive diffs where possible so merges stay cheap.
+
+The annotate-off feature (Feature 2) is **already implemented** on branch `feat/annotate-off-by-default` (commit `3bd3df1`) and is pending a push + PR. The other two are unstarted.
+
+---
+
+## Feature 1 — lavish-light as default theme + UI theme switcher
+
+### Problem
+
+The lavish skill currently defaults to the DaisyUI `luxury` theme when no explicit design system is present. That theme is dark and heavy. The `lavish-light` theme (a softened version of SWISS: dark-gray ink on near-white, hairline rules, light-gray code blocks) already exists in the `will-sargent-dbtlabs/lavish-themes` fork as a standalone HTML shell, but lavish-axi has no way to apply it automatically, and the chrome has no UI control for switching themes.
+
+### Goals
+
+1. Use `lavish-light` (or any bundled theme shell) as the default look for the artifact view.
+2. Let the user switch themes from the chrome's overflow menu without re-running the agent.
+
+### Design tensions
+
+- **Portability constraint:** `src/html-transform.js` documents that "artifacts stay byte-identical (apart from the SDK script tag)" so they remain portable when opened directly. Wrapping the artifact in a theme shell — or injecting theme CSS into it — would break that contract.
+- **Recommended resolution:** The theme applies only to the chrome, not the artifact. The chrome renders the artifact in its `<iframe>` as-is; the theme styles the surrounding masthead/sidebar/colophon frame. This keeps the artifact byte-identical. The lavish-themes HTML shells are *chrome* templates, not artifact wrappers.
+
+### Proposed approach
+
+1. Add a `--theme <name>` CLI flag and `LAVISH_AXI_THEME` env var (mirrors the annotate pattern).
+2. `createChromeHtml()` accepts a `theme` option; resolves to a bundled shell or the default `lavish-light`.
+3. The chrome client renders the selected theme shell as the outer page structure, with the `<iframe>` sandboxed inside it as today.
+4. The overflow menu gains a "Theme" sub-menu listing bundled themes; selection updates the chrome via a `lavish:setTheme` postMessage or a simple page-level CSS variable swap.
+5. Theme choice is stored in `~/.lavish-axi/state.json` per-session so reload restores it.
+
+### Files to touch
+
+| File | Change |
+|---|---|
+| `src/cli.js` | Add `resolveThemeFlag()`, include `theme` in POST body |
+| `src/server.js` | `shouldResolveTheme()`, `createChromeHtml({ theme })`, serve bundled shells |
+| `src/chrome-client.js` | Theme switcher UI logic |
+| `src/chrome.css` | Theme-agnostic structural chrome CSS; theme shells own their own palette |
+| `test/server.test.js` | TDD: default theme, `--theme lavish-light`, env override |
+| `test/cli-output.test.js` | TDD: `resolveThemeFlag` |
+
+### Open questions
+
+- Where do bundled theme shells live in the dist bundle? Options: inline as template strings in `server.js`, or served from `dist/themes/`.
+- Does the theme switcher rewrite `state.json` (persists across reloads) or is it session-only (lost on server restart)?
+
+### Size estimate
+
+Large — touches the chrome's rendering pipeline and requires a new asset-serving path. Likely 2–3 sessions.
+
+---
+
+## Feature 2 — annotate off by default ✅ DONE
+
+### Status
+
+Implemented on branch `feat/annotate-off-by-default` (commit `3bd3df1`). **Not yet pushed to origin.**
+
+### What was built
+
+- Default changed from `annotate = true` to `annotate = false`.
+- `--annotate` / `--no-annotate` per-open CLI flags.
+- `LAVISH_AXI_ANNOTATE=on` env override.
+- `shouldEnableAnnotate(query, env)` resolver in `server.js` (flag → env → false).
+- `resolveAnnotateFlag(args)` exported from `cli.js`.
+- Bootstrap JSON includes `annotate` field; `chrome-client.js` reads it on init.
+- `aria-pressed` on the Annotate button now reflects the actual initial state.
+- 9 new/modified tests; `pnpm run check` exits 0.
+
+### Pending
+
+Push branch + open PR on the fork before merging to `main`.
+
+---
+
+## Feature 3 — multi-page PDF / print
+
+### Problem
+
+Clicking browser Print (Cmd+P) on the lavish-axi chrome page captures only the first viewport of the sandboxed `<iframe>`. The iframe sandbox (`allow-scripts allow-forms allow-popups allow-downloads`, no `allow-same-origin`) prevents the browser from paginating iframe content. Result: long artifacts are truncated in print/PDF output.
+
+### Goals
+
+Produce a full-content PDF of the artifact — all pages, all content — without adding a heavy headless-browser dependency (no Puppeteer, no Playwright).
+
+### Proposed approach
+
+**New `/print/:key` route** that serves the artifact HTML directly in a top-level browser tab (not inside an iframe). When the user clicks "Print / Save PDF" in the chrome's overflow menu:
+
+1. Chrome opens `http://127.0.0.1:PORT/print/:key` in a new tab via `window.open()`.
+2. The `/print/:key` route serves the artifact HTML with the SDK script tag stripped (no annotation, no layout audit needed) and a thin `<script>` that calls `window.print()` after `DOMContentLoaded`.
+3. The browser's native print dialog opens on the full top-level document — all pages paginate correctly.
+4. The tab can be closed after print, or the user closes it manually.
+
+**Why this works:** The same-origin constraint that blocks iframe print doesn't apply to a top-level document served from the same local server. The browser paginates the full DOM tree.
+
+**SDK stripping:** `src/html-transform.js` already injects the SDK tag; the `/print` route needs a `stripLavishSdk()` helper (or passes a `{ sdk: false }` option to the existing transform) to produce a clean artifact.
+
+### Files to touch
+
+| File | Change |
+|---|---|
+| `src/server.js` | New `GET /print/:key` route; `stripLavishSdk()` or option in `injectLavishSdk` |
+| `src/html-transform.js` | `{ inject: false }` option, or a new `stripLavishSdk()` export |
+| `src/chrome-client.js` | "Print / Save PDF" action in overflow menu → `window.open('/print/:key')` |
+| `test/server.test.js` | TDD: `/print/:key` returns stripped HTML; auto-print script present |
+| `test/html-transform.test.js` | TDD: SDK not present when inject=false |
+
+### Edge cases
+
+- Artifact with relative asset paths: `/print/:key` must serve sibling assets via the existing `/artifact/:key/<path>` route, or rewrite relative URLs to absolute. The simplest fix: rewrite `src=` and `href=` relative paths to `http://127.0.0.1:PORT/artifact/:key/...` in the print transform.
+- Session not found: return 404, same as `/session/:key`.
+
+### Size estimate
+
+Medium — self-contained new route + a one-option change to the transform. Likely 1 session.
+
+---
+
+## Pending before any feature merge
+
+- [ ] Push `feat/annotate-off-by-default` to `origin` and open PR
+- [ ] Decide: repoint lavish skill from `npx -y lavish-axi@0.1.31` to fork via `npm link` (do after all three features land, or sooner for annotate-off)
+- [ ] Periodic upstream sync: `git fetch upstream && git log upstream/main ^HEAD --oneline` to review new commits
+
+---
+
+_Last updated: 2026-06-29_
