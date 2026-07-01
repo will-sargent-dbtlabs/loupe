@@ -790,6 +790,12 @@ test("createChromeHtml renders annotate enabled when requested", () => {
   assert.match(html, /"annotate":true/);
 });
 
+test("chrome overflow menu includes a Print / Save PDF action", () => {
+  const html = createChromeHtml({ key: "abc", file: "/tmp/artifact.html" });
+  assert.match(html, /id="printArtifact" type="button"/);
+  assert.match(html, /Print \/ Save PDF/);
+});
+
 test("chrome-client initializes annotation from the session bootstrap, not hardcoded on", async () => {
   const client = await chromeClientSource();
   assert.match(client, /let annotation = sessionData\.annotate === true/);
