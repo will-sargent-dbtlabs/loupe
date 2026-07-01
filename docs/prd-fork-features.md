@@ -1,6 +1,6 @@
 # lavish-axi fork — feature PRD
 
-_Fork: `will-sargent-dbtlabs/lavish-axi` · Status: deferred pending review_
+_Fork: `will-sargent-dbtlabs/lavish-axi` · Status: all three features shipped_
 
 ---
 
@@ -8,11 +8,23 @@ _Fork: `will-sargent-dbtlabs/lavish-axi` · Status: deferred pending review_
 
 This PRD covers three planned features for the `will-sargent-dbtlabs/lavish-axi` fork. The fork tracks upstream (`kunchenguid/lavish-axi`) via `git fetch upstream` + periodic merges; changes are isolated as new files or small additive diffs where possible so merges stay cheap.
 
-The annotate-off feature (Feature 2) is **already implemented** on branch `feat/annotate-off-by-default` (commit `3bd3df1`) and is pending a push + PR. The other two are unstarted.
+All three features (theme switcher, annotate-off-by-default, print/PDF) have shipped and merged to `main`. See each feature's own "Status" section below for the branch/PR it landed through.
 
 ---
 
-## Feature 1 — lavish-light as default theme + UI theme switcher
+## Feature 1 — lavish-light as default theme + UI theme switcher ✅ DONE
+
+### Status
+
+Implemented on branch `feat/chrome-theme-switcher` (commit `d508d63`).
+
+### What was built
+
+- Three chrome themes — `lavish-light` (default), `midnight` (the original dark palette), `swiss` — as `:root[data-lavish-theme="..."]` CSS custom-property overrides in `src/chrome.css`, captured from the matching bundled artifact themes in `will-sargent-dbtlabs/lavish-themes`.
+- Theming applies only to the chrome (bar, overflow menu, sidebar), never the artifact iframe, resolving the design tension recorded below.
+- `CHROME_THEMES` / `resolveChromeTheme(query, env)` in a new `src/chrome-themes.js` (flag → env → `lavish-light` default).
+- `--theme <id>` CLI flag and `LAVISH_AXI_THEME` env var, mirroring `--annotate`/`LAVISH_AXI_ANNOTATE`.
+- A "Theme" row of swatch buttons in the overflow menu; clicking one updates `document.documentElement.dataset.lavishTheme` and a `sessionStorage` entry (never `~/.lavish-axi/state.json`) — session-only by design, so it resets on a fresh open but survives a same-tab reload.
 
 ### Problem
 
@@ -81,7 +93,19 @@ Push branch + open PR on the fork before merging to `main`.
 
 ---
 
-## Feature 3 — multi-page PDF / print
+## Feature 3 — multi-page PDF / print ✅ DONE
+
+### Status
+
+Implemented and merged to `main` via PR #4.
+
+### What was built
+
+Built close to the original proposal below, with two deliberate deviations found better during implementation:
+
+- A `/print/:key` route family mirrors the existing `/artifact/:key` URL shape (`/print/:key`, `/print/:key/index.html`, `/print/:key/<path>`) instead of rewriting relative asset URLs to absolute — sibling assets resolve for free through the same `resolveArtifactAsset` helper the artifact route already uses.
+- A new `injectPrintScript(html)` in `src/html-transform.js`, separate from `injectLavishSdk` (rather than a `{ sdk: false }` option on it) — the print route never calls `injectLavishSdk` at all, so there's no SDK/annotation/layout-audit machinery to strip.
+- CSS-only-tabs dashboard artifacts needed a second, independent fix: printing doesn't change which tab's radio is checked, so an `@media print` override is now required in each such artifact (documented in the `dashboard` playbook's `design_rules` in `src/playbooks.js`).
 
 ### Problem
 
@@ -127,10 +151,10 @@ Medium — self-contained new route + a one-option change to the transform. Like
 
 ## Pending before any feature merge
 
-- [ ] Push `feat/annotate-off-by-default` to `origin` and open PR
-- [ ] Decide: repoint lavish skill from `npx -y lavish-axi@0.1.31` to fork via `npm link` (do after all three features land, or sooner for annotate-off)
+- [x] Push `feat/annotate-off-by-default` to `origin` and open PR (merged via PR #3)
+- [ ] Decide: repoint lavish skill from `npx -y lavish-axi@0.1.31` to fork via `npm link` (all three planned features have now landed)
 - [ ] Periodic upstream sync: `git fetch upstream && git log upstream/main ^HEAD --oneline` to review new commits
 
 ---
 
-_Last updated: 2026-06-29_
+_Last updated: 2026-07-01_
