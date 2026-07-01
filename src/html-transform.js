@@ -5,3 +5,11 @@ export function injectLavishSdk(html, key) {
   }
   return `${html}\n${script}`;
 }
+
+export function injectPrintScript(html) {
+  const script = `<script>window.addEventListener("DOMContentLoaded",()=>window.print());</script>`;
+  if (/<\/body\s*>/i.test(html)) {
+    return html.replace(/<\/body\s*>/i, `${script}</body>`);
+  }
+  return `${html}\n${script}`;
+}
