@@ -59,8 +59,5 @@ test("print script leaves the rest of the document untouched", () => {
 test("print script appends at end of document when there is no body tag", () => {
   const result = injectPrintScript("<h1>Hi</h1>");
 
-  assert.equal(
-    result,
-    '<h1>Hi</h1>\n<script>window.addEventListener("DOMContentLoaded",()=>window.print());</script>',
-  );
+  assert.equal(result, '<h1>Hi</h1>\n<script>window.addEventListener("DOMContentLoaded",()=>window.print());</script>');
 });

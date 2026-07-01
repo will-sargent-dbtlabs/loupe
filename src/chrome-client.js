@@ -24,6 +24,7 @@ const moreButton = /** @type {HTMLButtonElement} */ (document.getElementById("mo
 const moreMenu = /** @type {HTMLDivElement} */ (document.getElementById("moreMenu"));
 const reloadArtifactButton = /** @type {HTMLButtonElement} */ (document.getElementById("reloadArtifact"));
 const copySnapshotButton = /** @type {HTMLButtonElement} */ (document.getElementById("copySnapshot"));
+const printArtifactButton = /** @type {HTMLButtonElement} */ (document.getElementById("printArtifact"));
 const endButton = /** @type {HTMLButtonElement} */ (document.getElementById("end"));
 const copyPathButton = /** @type {HTMLButtonElement} */ (document.getElementById("copyPath"));
 const copyHint = /** @type {HTMLSpanElement} */ (document.getElementById("copyHint"));
@@ -575,6 +576,7 @@ chatInput.addEventListener("input", hideSendHint);
 copyPathButton.onclick = copyFilePath;
 reloadArtifactButton.onclick = reloadArtifact;
 copySnapshotButton.onclick = copyDomSnapshot;
+printArtifactButton.onclick = () => window.open(`/print/${key}`, "_blank");
 endButton.onclick = () => {
   closeMenus();
   endSession();
