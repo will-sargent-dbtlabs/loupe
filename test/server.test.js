@@ -221,6 +221,30 @@ test("artifact SDK does not annotate text selected inside native controls", () =
   assert.match(js, /isInteractiveControl\(ancestor\)/);
 });
 
+test("artifact SDK posts its declared content themes and current selection to the chrome", () => {
+  const js = createSdkJs("abc");
+  assert.match(js, /getElementById\("lavish-content-themes"\)/);
+  assert.match(js, /parent\.postMessage\(\{ type: "lavish:contentThemes", themes, current \}, "\*"\)/);
+});
+
+test("artifact SDK does not post content themes when no manifest is declared", () => {
+  const js = createSdkJs("abc");
+  assert.match(js, /if \(!themes\.length\) return;/);
+});
+
+test("artifact SDK applies a requested content theme by setting the root data attribute", () => {
+  const js = createSdkJs("abc");
+  assert.match(js, /msg\.type === "lavish:setContentTheme" && typeof msg\.id === "string"/);
+  assert.match(js, /document\.documentElement\.dataset\.lavishContentTheme = msg\.id;/);
+});
+
+test("artifact SDK exports a full standalone HTML snapshot on request", () => {
+  const js = createSdkJs("abc");
+  assert.match(js, /msg\.type === "lavish:requestContentExport"/);
+  assert.match(js, /const html = "<!doctype html>\\n" \+ document\.documentElement\.outerHTML;/);
+  assert.match(js, /parent\.postMessage\(\{ type: "lavish:contentExport", html \}, "\*"\)/);
+});
+
 test("artifact SDK shows native cursors on form controls in annotation mode", () => {
   const js = createSdkJs("abc");
 
