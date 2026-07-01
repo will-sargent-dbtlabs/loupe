@@ -217,6 +217,35 @@ export const PLAYBOOKS = [
     ],
   },
   {
+    id: "dashboard",
+    use_when:
+      "Build a multi-tab or multi-panel dashboard where the user switches sections instead of scrolling one long page",
+    choose: [
+      "Use CSS-only tabs (radio inputs + labels, no JavaScript) when panels are mutually exclusive and the artifact should stay a single portable file that renders identically outside Lavish.",
+      "Use one long scroll page with anchor links instead when the user needs to scan or print everything at once, or when sections are not truly exclusive.",
+      "Use JS-driven tabs only when the artifact is mocking a specific app whose own UI already works that way.",
+    ],
+    structure: [
+      "Give every panel a sticky nav that names all of it up front so the user always knows what else exists.",
+      "Default-check the panel most relevant to why the artifact was opened, not always the first one.",
+      "When condensing a richer source (an existing multi-tab HTML export, a long doc) into tabs, mirror its section list 1:1 first, then improve layout - do not silently drop sections while restructuring.",
+    ],
+    design_rules: [
+      'Nest each radio input inside its own label (`<label><input type="radio" ...><span>Text</span></label>`) and size the input to cover the label (`position: absolute; inset: 0; opacity: 0;`). Never leave bare radio inputs as page-level siblings hidden with `opacity:0;position:absolute` and no explicit size or label overlap - their hit area stops matching the visible tab.',
+      "Because the radio is nested inside its label, the classic forward `~` general-sibling selector cannot reach the panels. Use `body:has(#tab-x:checked) #panel-x { display: block; }` instead (supported in current Chromium); default every panel to `display: none` and add exactly one `:has()` rule per panel that turns it back on.",
+      'Style the active tab via the same `:has()` selector targeting the label (e.g. `body:has(#tab-x:checked) label[data-tab="x"] { ... }`), keyed off a `data-tab` attribute rather than `label[for=]`, since `for` is redundant (and easy to get wrong) once the input is nested inside the label.',
+    ],
+    pitfalls: [
+      "Do not close a CSS comment with `-->` (HTML syntax) instead of `*/`. The parser will not error - it silently treats everything up to the next real `*/` anywhere later in the file as one comment, which can delete an entire feature's CSS with zero visible symptoms until you inspect computed styles or `document.styleSheets`.",
+      "Do not assume a click-driven demo that works when the file is opened directly also proves it works inside a Lavish review session. Re-verify inside the actual `lavish-axi` session (not just the raw file): the artifact iframe is sandboxed with no `allow-same-origin`, so `evaluate_script`/`contentDocument` from outside the iframe cannot reach in, but real clicks and page-tree-uid-targeted automation clicks still work correctly against the sandboxed content.",
+      "Do not trust that automated clicking by accessibility node is equivalent to a human clicking the visible label - if the radio's own bounding box does not overlap the label (the old sibling-radio pattern), an automated click can silently no-op while a human click on the label still works, or vice versa. The nested-radio pattern above makes both cases identical.",
+    ],
+    lavish_notes: [
+      "A Lavish dashboard should still let the user annotate content inside the active panel; tabs only change what is visible, not how annotation targets elements.",
+      "If layout_warnings ever come back clean but a tab visibly does nothing when clicked, that is a CSS state-machine bug, not a warning the audit will catch - check computed styles on the radio and panel directly.",
+    ],
+  },
+  {
     id: "slides",
     use_when: "Create a deliberate presentation when slides are requested",
     choose: [

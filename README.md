@@ -171,7 +171,7 @@ pnpm link
 | `lavish-axi setup hooks`      | Install or repair optional SessionStart hooks for Claude Code, Codex, OpenCode, and GitHub Copilot CLI; restart the agent session afterward.                                |
 | `lavish-axi server`           | Run the local Lavish Editor server.                                                                                                                                         |
 
-Known playbook IDs: `diagram`, `table`, `comparison`, `plan`, `code`, `input`, `slides`.
+Known playbook IDs: `diagram`, `table`, `comparison`, `plan`, `code`, `input`, `dashboard`, `slides`.
 One artifact often combines several playbooks, such as a plan that includes a comparison and a diagram, so agents must match against each `use_when` trigger and open every matching playbook before writing HTML.
 For flows, architecture, state, or sequence diagrams, open the diagram playbook and use the Mermaid tooling from `lavish-axi design` unless SVG is needed for richly annotated nodes; avoid hand-built div/flexbox boxes-and-arrows.
 
