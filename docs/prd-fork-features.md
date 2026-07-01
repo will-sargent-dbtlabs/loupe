@@ -26,7 +26,7 @@ The lavish skill currently defaults to the DaisyUI `luxury` theme when no explic
 ### Design tensions
 
 - **Portability constraint:** `src/html-transform.js` documents that "artifacts stay byte-identical (apart from the SDK script tag)" so they remain portable when opened directly. Wrapping the artifact in a theme shell — or injecting theme CSS into it — would break that contract.
-- **Recommended resolution:** The theme applies only to the chrome, not the artifact. The chrome renders the artifact in its `<iframe>` as-is; the theme styles the surrounding masthead/sidebar/colophon frame. This keeps the artifact byte-identical. The lavish-themes HTML shells are *chrome* templates, not artifact wrappers.
+- **Recommended resolution:** The theme applies only to the chrome, not the artifact. The chrome renders the artifact in its `<iframe>` as-is; the theme styles the surrounding masthead/sidebar/colophon frame. This keeps the artifact byte-identical. The lavish-themes HTML shells are _chrome_ templates, not artifact wrappers.
 
 ### Proposed approach
 
@@ -38,14 +38,14 @@ The lavish skill currently defaults to the DaisyUI `luxury` theme when no explic
 
 ### Files to touch
 
-| File | Change |
-|---|---|
-| `src/cli.js` | Add `resolveThemeFlag()`, include `theme` in POST body |
-| `src/server.js` | `shouldResolveTheme()`, `createChromeHtml({ theme })`, serve bundled shells |
-| `src/chrome-client.js` | Theme switcher UI logic |
-| `src/chrome.css` | Theme-agnostic structural chrome CSS; theme shells own their own palette |
-| `test/server.test.js` | TDD: default theme, `--theme lavish-light`, env override |
-| `test/cli-output.test.js` | TDD: `resolveThemeFlag` |
+| File                      | Change                                                                      |
+| ------------------------- | --------------------------------------------------------------------------- |
+| `src/cli.js`              | Add `resolveThemeFlag()`, include `theme` in POST body                      |
+| `src/server.js`           | `shouldResolveTheme()`, `createChromeHtml({ theme })`, serve bundled shells |
+| `src/chrome-client.js`    | Theme switcher UI logic                                                     |
+| `src/chrome.css`          | Theme-agnostic structural chrome CSS; theme shells own their own palette    |
+| `test/server.test.js`     | TDD: default theme, `--theme lavish-light`, env override                    |
+| `test/cli-output.test.js` | TDD: `resolveThemeFlag`                                                     |
 
 ### Open questions
 
@@ -106,13 +106,13 @@ Produce a full-content PDF of the artifact — all pages, all content — withou
 
 ### Files to touch
 
-| File | Change |
-|---|---|
-| `src/server.js` | New `GET /print/:key` route; `stripLavishSdk()` or option in `injectLavishSdk` |
-| `src/html-transform.js` | `{ inject: false }` option, or a new `stripLavishSdk()` export |
-| `src/chrome-client.js` | "Print / Save PDF" action in overflow menu → `window.open('/print/:key')` |
-| `test/server.test.js` | TDD: `/print/:key` returns stripped HTML; auto-print script present |
-| `test/html-transform.test.js` | TDD: SDK not present when inject=false |
+| File                          | Change                                                                         |
+| ----------------------------- | ------------------------------------------------------------------------------ |
+| `src/server.js`               | New `GET /print/:key` route; `stripLavishSdk()` or option in `injectLavishSdk` |
+| `src/html-transform.js`       | `{ inject: false }` option, or a new `stripLavishSdk()` export                 |
+| `src/chrome-client.js`        | "Print / Save PDF" action in overflow menu → `window.open('/print/:key')`      |
+| `test/server.test.js`         | TDD: `/print/:key` returns stripped HTML; auto-print script present            |
+| `test/html-transform.test.js` | TDD: SDK not present when inject=false                                         |
 
 ### Edge cases
 
