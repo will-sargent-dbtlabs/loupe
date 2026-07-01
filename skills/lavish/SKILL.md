@@ -57,6 +57,7 @@ For flows, architecture, state, or sequence diagrams, do not hand-build boxes-an
 - `plan` - Explain a product or technical plan before implementation
 - `code` - Render source code, code files, patches, PR diffs, and before/after code inside Lavish artifacts
 - `input` - Must be used when the agent needs to collect user input on decisions, choices, preferences, triage, scope, or other structured feedback from within the artifact
+- `dashboard` - Build a multi-tab or multi-panel dashboard where the user switches sections instead of scrolling one long page
 - `slides` - Create a deliberate presentation when slides are requested
 
 ## Commands & rules
