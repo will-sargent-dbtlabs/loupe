@@ -851,3 +851,15 @@ body.layout-gate-active iframe#artifact {
 :root[data-lavish-theme="swiss"] .cobrand .cb-color {
   display: block;
 }
+
+/* Conversation/annotation panel toggle (on-screen only; the print route has no chrome). */
+body.panel-collapsed .layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+body.panel-collapsed .panel {
+  display: none;
+}
+#panelToggle[aria-pressed="true"] {
+  color: var(--fg);
+  background: var(--hover-bg);
+}

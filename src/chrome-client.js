@@ -22,6 +22,7 @@ const annotationSwitch = /** @type {HTMLButtonElement} */ (document.getElementBy
 const moreWrap = /** @type {HTMLDivElement} */ (document.getElementById("moreWrap"));
 const moreButton = /** @type {HTMLButtonElement} */ (document.getElementById("moreButton"));
 const moreMenu = /** @type {HTMLDivElement} */ (document.getElementById("moreMenu"));
+const panelToggle = /** @type {HTMLButtonElement} */ (document.getElementById("panelToggle"));
 const reloadArtifactButton = /** @type {HTMLButtonElement} */ (document.getElementById("reloadArtifact"));
 const copySnapshotButton = /** @type {HTMLButtonElement} */ (document.getElementById("copySnapshot"));
 const printArtifactButton = /** @type {HTMLButtonElement} */ (document.getElementById("printArtifact"));
@@ -654,6 +655,28 @@ annotationSwitch.onclick = () => {
   annotation = !annotation;
   annotationSwitch.setAttribute("aria-pressed", String(annotation));
   postToFrame({ type: "lavish:setAnnotationMode", enabled: annotation });
+};
+
+const panelStorageKey = "loupe:panelCollapsed";
+/** @param {boolean} collapsed */
+function setPanelCollapsed(collapsed) {
+  document.body?.classList?.toggle("panel-collapsed", collapsed);
+  panelToggle.setAttribute("aria-pressed", String(collapsed));
+  panelToggle.title = collapsed ? "Show conversation panel" : "Hide conversation panel";
+}
+try {
+  setPanelCollapsed(localStorage.getItem(panelStorageKey) === "1");
+} catch {
+  // Best-effort only; the panel just stays visible if storage is unavailable.
+}
+panelToggle.onclick = () => {
+  const collapsed = !document.body?.classList?.contains("panel-collapsed");
+  setPanelCollapsed(collapsed);
+  try {
+    localStorage.setItem(panelStorageKey, collapsed ? "1" : "0");
+  } catch {
+    // Best-effort persistence.
+  }
 };
 
 sendButton.onclick = () => sendQueued(false);
