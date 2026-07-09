@@ -4,7 +4,7 @@ export const CHROME_THEMES = [
   { id: "swiss", label: "Swiss" },
 ];
 
-export const DEFAULT_CHROME_THEME = "lavish-light";
+export const DEFAULT_CHROME_THEME = "midnight";
 
 const THEME_IDS = new Set(CHROME_THEMES.map((theme) => theme.id));
 
