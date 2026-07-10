@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 72" width="300" height="72" role="img" aria-label="Loupe">
+  <defs>
+    <linearGradient id="loupeGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2f6bff"/>
+      <stop offset="0.5" stop-color="#8a4dff"/>
+      <stop offset="1" stop-color="#ff6a1a"/>
+    </linearGradient>
+  </defs>
+  <!-- gradient pill frame -->
+  <rect x="1.75" y="1.75" width="296.5" height="68.5" rx="34.25" fill="none" stroke="url(#loupeGrad)" stroke-width="3"/>
+  <!-- loupe / magnifier mark -->
+  <g fill="none" stroke="url(#loupeGrad)" stroke-width="3.4" stroke-linecap="round">
+    <circle cx="44" cy="33" r="12"/>
+    <line x1="53" y1="42" x2="61.5" y2="50.5"/>
+  </g>
+  <circle cx="44" cy="33" r="4.4" fill="url(#loupeGrad)"/>
+  <!-- wordmark -->
+  <text x="82" y="47" font-family="'Inter Tight','Inter',system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-weight="800" font-size="34" letter-spacing="-0.5" fill="#14161c">Loupe</text>
+</svg>

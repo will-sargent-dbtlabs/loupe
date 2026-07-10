@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="lavish-design" content="off"><title>Loupe logo</title>
+<style>
+  :root{--grad:linear-gradient(90deg,#2f6bff,#8a4dff,#ff6a1a)}
+  *{box-sizing:border-box} body{margin:0;font-family:"Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:#fcfcfa;color:#14161c;padding:40px 6vw 80px;max-width:1000px;margin:0 auto}
+  h1{font-weight:900;font-size:2rem;letter-spacing:-.02em;margin:0 0 4px} .sub{color:#6b6b66;margin:0 0 28px;font-size:.95rem}
+  h2{font-weight:800;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#6b6b66;margin:30px 0 10px;border-bottom:1px solid #e3e2dc;padding-bottom:6px}
+  .panel{border:1px solid #e3e2dc;border-radius:10px;padding:34px;display:flex;align-items:center;gap:40px;flex-wrap:wrap}
+  .panel.dark{background:#0f1115;border-color:#2a2f3a}
+  .row{display:flex;align-items:center;gap:36px;flex-wrap:wrap}
+  .cap{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#9a9a95;margin-top:8px}
+  .cell{display:flex;flex-direction:column;align-items:flex-start}
+  .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+</style></head>
+<body>
+  <h1>Loupe <span class="grad-text">logo</span></h1>
+  <p class="sub">Gradient pill (blue → purple → orange) + loupe/magnifier mark + wordmark. Replaces the old "Lavish" gold-ring mark. Self-contained SVG.</p>
+
+  <h2>On light</h2>
+  <div class="panel">
+    <div class="cell">
+      <svg viewBox="0 0 300 72" width="300" height="72"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2f6bff"/><stop offset=".5" stop-color="#8a4dff"/><stop offset="1" stop-color="#ff6a1a"/></linearGradient></defs>
+        <rect x="1.75" y="1.75" width="296.5" height="68.5" rx="34.25" fill="none" stroke="url(#g1)" stroke-width="3"/>
+        <g fill="none" stroke="url(#g1)" stroke-width="3.4" stroke-linecap="round"><circle cx="44" cy="33" r="12"/><line x1="53" y1="42" x2="61.5" y2="50.5"/></g>
+        <circle cx="44" cy="33" r="4.4" fill="url(#g1)"/>
+        <text x="82" y="47" font-weight="800" font-size="34" letter-spacing="-0.5" fill="#14161c">Loupe</text></svg>
+      <div class="cap">loupe-logo.svg</div>
+    </div>
+    <div class="cell">
+      <svg viewBox="0 0 300 72" width="186"><defs><linearGradient id="g1b" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2f6bff"/><stop offset=".5" stop-color="#8a4dff"/><stop offset="1" stop-color="#ff6a1a"/></linearGradient></defs>
+        <rect x="1.75" y="1.75" width="296.5" height="68.5" rx="34.25" fill="none" stroke="url(#g1b)" stroke-width="3"/>
+        <g fill="none" stroke="url(#g1b)" stroke-width="3.4" stroke-linecap="round"><circle cx="44" cy="33" r="12"/><line x1="53" y1="42" x2="61.5" y2="50.5"/></g>
+        <circle cx="44" cy="33" r="4.4" fill="url(#g1b)"/>
+        <text x="82" y="47" font-weight="800" font-size="34" letter-spacing="-0.5" fill="#14161c">Loupe</text></svg>
+      <div class="cap">small (186px)</div>
+    </div>
+  </div>
+
+  <h2>On dark</h2>
+  <div class="panel dark">
+    <div class="cell">
+      <svg viewBox="0 0 300 72" width="300" height="72"><defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2f6bff"/><stop offset=".5" stop-color="#8a4dff"/><stop offset="1" stop-color="#ff6a1a"/></linearGradient></defs>
+        <rect x="1.75" y="1.75" width="296.5" height="68.5" rx="34.25" fill="none" stroke="url(#g2)" stroke-width="3"/>
+        <g fill="none" stroke="url(#g2)" stroke-width="3.4" stroke-linecap="round"><circle cx="44" cy="33" r="12"/><line x1="53" y1="42" x2="61.5" y2="50.5"/></g>
+        <circle cx="44" cy="33" r="4.4" fill="url(#g2)"/>
+        <text x="82" y="47" font-weight="800" font-size="34" letter-spacing="-0.5" fill="#f2f3f5">Loupe</text></svg>
+      <div class="cap" style="color:#6b6f78">loupe-logo-dark.svg</div>
+    </div>
+  </div>
+
+  <h2>Mark only (app icon / favicon)</h2>
+  <div class="panel">
+    <svg viewBox="0 0 80 80" width="72" height="72"><defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f6bff"/><stop offset=".5" stop-color="#8a4dff"/><stop offset="1" stop-color="#ff6a1a"/></linearGradient></defs>
+      <rect x="2" y="2" width="76" height="76" rx="20" fill="none" stroke="url(#g3)" stroke-width="3.5"/>
+      <g fill="none" stroke="url(#g3)" stroke-width="4.5" stroke-linecap="round"><circle cx="35" cy="34" r="15"/><line x1="46" y1="45" x2="58" y2="57"/></g>
+      <circle cx="35" cy="34" r="5.5" fill="url(#g3)"/></svg>
+    <svg viewBox="0 0 80 80" width="40" height="40"><defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f6bff"/><stop offset=".5" stop-color="#8a4dff"/><stop offset="1" stop-color="#ff6a1a"/></linearGradient></defs>
+      <rect x="2" y="2" width="76" height="76" rx="20" fill="none" stroke="url(#g4)" stroke-width="3.5"/>
+      <g fill="none" stroke="url(#g4)" stroke-width="4.5" stroke-linecap="round"><circle cx="35" cy="34" r="15"/><line x1="46" y1="45" x2="58" y2="57"/></g>
+      <circle cx="35" cy="34" r="5.5" fill="url(#g4)"/></svg>
+    <div class="cap">loupe-mark.svg (80 / 40 px)</div>
+  </div>
+</body></html>
