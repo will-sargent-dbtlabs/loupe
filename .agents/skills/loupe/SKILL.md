@@ -78,6 +78,7 @@ Because the shells set `lavish-design: off`, do **not** also apply Tailwind/Dais
 - Use visual hierarchy to make the most important decisions, risks, tradeoffs, and next actions obvious at a glance
 - Use visual structure such as sections, cards, tables, diagrams, annotated snippets, and side-by-side comparisons instead of long prose
 - Choose typography, spacing, color, and layout deliberately so the artifact has a clear point of view
+- Keep report shells broad enough for the review window. Preserve the Aurora themes' 1480px page cap; constrain prose with element-level line lengths instead of narrowing the whole artifact.
 - Prevent horizontal overflow at every nesting level: nested grid/flex children also need minmax(0, 1fr) tracks and min-width: 0, especially when badges, labels, or status text use wide pixel or monospace fonts; wrap, truncate, or contain long unbreakable text deliberately
 - Long paths, commands, hashes, and inline `code` spans should be allowed to wrap (`overflow-wrap:anywhere` or equivalent), especially inside sidebars and narrow grid columns
 
