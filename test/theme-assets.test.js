@@ -11,4 +11,11 @@ for (const themeName of themeNames) {
     assert.match(theme, /body\{[^}]*max-width:1480px/);
     assert.doesNotMatch(theme, /body\{[^}]*max-width:1120px/);
   });
+
+  test(`${themeName} keeps mobile grid tracks shrinkable`, async () => {
+    const theme = await readFile(new URL(`../.agents/skills/loupe/themes/${themeName}`, import.meta.url), "utf8");
+
+    assert.match(theme, /main\{grid-template-columns:minmax\(0,1fr\)/);
+    assert.doesNotMatch(theme, /main\{grid-template-columns:1fr;/);
+  });
 }
