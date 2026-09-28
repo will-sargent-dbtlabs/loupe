@@ -74,7 +74,10 @@
   @media (max-width:720px){
     body{padding:28px 5vw 56px;overflow-x:hidden}
     header.masthead{grid-template-columns:1fr;gap:12px} header.masthead .meta{text-align:left;align-items:flex-start}
-    main{grid-template-columns:1fr;gap:32px} p,p.lede,blockquote{max-width:100%}
+    /* minmax(0,...) not bare 1fr: a bare 1fr track has an implicit auto(min-content)
+       floor, so wide tables inflate the column past its parent. */
+    main{grid-template-columns:minmax(0,1fr);gap:32px} article,aside{min-width:0}
+    article>*,aside>*{min-width:0} p,p.lede,blockquote{max-width:100%}
     table{font-size:.85rem;display:block;overflow-x:auto}
   }
   .brand-lockup{display:flex;flex-direction:row;align-items:center;gap:10px}

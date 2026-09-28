@@ -36,7 +36,10 @@ def main():
     for subset, block in re.findall(r"/\*\s*([\w-]+)\s*\*/\s*(@font-face\s*\{.*?\})", css, re.S):
         if subset not in KEEP:
             continue
-        u = re.search(r"src:\s*url\((https://[^)]+\.woff2)\)", block)
+        # Consume any trailing format(...) too: Google's CSS already supplies one,
+        # and leaving it in place yields `format('woff2') format('woff2')`, which is
+        # an unparseable src component -> the whole @font-face is discarded.
+        u = re.search(r"src:\s*url\((https://[^)]+\.woff2)\)(?:\s*format\([^)]*\))?", block)
         if not u:
             continue
         woff2 = get(u.group(1)); nbytes += len(woff2)
